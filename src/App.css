@@ -1,38 +1,81 @@
+/* Global styles */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f2;
+}
+
+/* App container */
 .App {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* Header */
+h1,
+h3 {
   text-align: center;
+  color: #007bff;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* File input */
+input[type="file"] {
+  width: 100%;
+  margin-bottom: 20px;
+  border: 1px solid #007bff;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Data tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+th {
+  background-color: #007bff;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* Processed data button */
+a.download-button {
+  display: block;
+  margin: 0 auto;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  text-align: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Footer */
+footer {
+  text-align: center;
+  font-size: smaller;
+  color: #666666;
+}
+
+/* Additional styles */
+.App {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+table {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+a.download-button {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.tableContainer{
+  background-color: #eeeeee;
+  height: 400px;
+  padding: 0 10px 10px 10px;
+  overflow: scroll;
 }
