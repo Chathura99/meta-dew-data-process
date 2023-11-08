@@ -126,6 +126,23 @@ class App extends Component {
       'Check': checkColumn[index],
       'Bank Transfer': bankTransferColumn[index],
     }));
+
+    // Empty row
+    const emptyRow = {
+      'Product id': '',
+      'Sale id': '',
+      'Date': '',
+      'Sold to': '',
+      'Total': '',
+      'Profit': '',
+      'Payment type': '',
+      'Cash': '',
+      'Credit Account': '',
+      'Check': '',
+      'Bank Transfer': '',
+    };
+  
+    newTable.push(emptyRow);
   
     // Calculate the totals and append a new row with the total values
     const totalRow = {
