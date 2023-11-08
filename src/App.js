@@ -48,7 +48,8 @@ class App extends Component {
     };
     reader.readAsArrayBuffer(file);
   };
-  filterDuplicateSales(data) {
+
+ filterDuplicateSales(data) {
     var uniqueSales = new Set();
     const filteredData = [data[0]]; // Copy the first row (header) to the filtered data
   
@@ -112,14 +113,36 @@ class App extends Component {
       }
     }
   
-    // Create a new array with the columns
     const newTable = filteredData.slice(1).map((row, index) => ({
-      ...row,
+      'Product id': row[0],
+      'Sale id': row[19],
+      'Date': row[21],
+      'Sold to': row[25],
+      'Total': row[30],
+      'Profit': row[33],
+      'Payment type': row[35],
       'Cash': cashColumn[index],
       'Credit Account': creditAccountColumn[index],
       'Check': checkColumn[index],
       'Bank Transfer': bankTransferColumn[index],
     }));
+  
+    // Calculate the totals and append a new row with the total values
+    const totalRow = {
+      'Product id': 'Total',
+      'Sale id': '',
+      'Date': '',
+      'Sold to': '',
+      'Total': newTable.reduce((acc, row) => acc + parseFloat(row['Total'] || 0), 0),
+      'Profit': newTable.reduce((acc, row) => acc + parseFloat(row['Profit'] || 0), 0),
+      'Payment type': '',
+      'Cash': newTable.reduce((acc, row) => acc + parseFloat(row['Cash'] || 0), 0),
+      'Credit Account': newTable.reduce((acc, row) => acc + parseFloat(row['Credit Account'] || 0), 0),
+      'Check': newTable.reduce((acc, row) => acc + parseFloat(row['Check'] || 0), 0),
+      'Bank Transfer': newTable.reduce((acc, row) => acc + parseFloat(row['Bank Transfer'] || 0), 0),
+    };
+  
+    newTable.push(totalRow);
   
     console.log(newTable);
   
@@ -128,162 +151,87 @@ class App extends Component {
   
 
   // filterDuplicateSales(data) {
-    // var uniqueSales = new Set();
-    // const filteredData = [data[0]]; // Copy the first row (header) to the filtered data
-    // // console.log(filteredData)
-    // for (let i = 1; i < data.length; i++) {
-    //   const row = data[i];
-    //   const saleId = row[19]; //saleID
-    //   // console.log(saleId)
 
-    //   // const paymentType = row[35]; //saleID
-    //   // console.log(paymentType)
+  //   var uniqueSales = new Set();
+  //   const filteredData = [data[0]]; // Copy the first row (header) to the filtered data
 
-    //   // Cash, Check, Credit Account, Bank Transfer
+  //   // Initialize columns
+  //   const cashColumn = [];
+  //   const creditAccountColumn = [];
+  //   const checkColumn = [];
+  //   const bankTransferColumn = [];
 
-    //   if (!uniqueSales.has(saleId)) {
-    //     uniqueSales.add(saleId);
-    //     // console.log(uniqueSales)
-    //     filteredData.push(row);
-    //     // console.log(filteredData)
-    //   }
-    // }
+  //   for (let i = 1; i < data.length; i++) {
+  //     const row = data[i];
+  //     const saleId = row[19]; // Sale ID
 
-    // // Initialize columns
-    // const cashColumn = [];
-    // const creditAccountColumn = [];
-    // const checkColumn = [];
-    // const bankTransferColumn = [];
+  //     if (!uniqueSales.has(saleId)) {
+  //       uniqueSales.add(saleId);
 
-    // for (let i = 1; i < filteredData.length; i++) {
-    //   const row = filteredData[i];
-    //   const text = row[35]; // Payment Type
-    //   console.log(text)
-    //   // Use regular expressions to match and capture the values
-    //   if (text != null) {
-    //     const cashMatch = text.match(/Cash: Rs([\d,.]+)/);
-    //     const creditAccountMatch = text.match(/Credit Account: Rs([\d,.]+)/);
-    //     const checkMatch = text.match(/Check: Rs([\d,.]+)/);
-    //     const bankTransferMatch = text.match(/Bank Transfer: Rs([\d,.]+)/);
-    //     // Parse and store the matched values
-    //     if (cashMatch) {
-    //       cashColumn.push(parseFloat(cashMatch[1].replace(/[^0-9.]/g, '')));
-    //     } else {
-    //       cashColumn.push(0);
-    //     }
+  //       // Payment Type
+  //       const text = row[35];
+  //       console.log(text);
 
-    //     if (creditAccountMatch) {
-    //       creditAccountColumn.push(parseFloat(creditAccountMatch[1].replace(/[^0-9.]/g, '')));
-    //     } else {
-    //       creditAccountColumn.push(0);
-    //     }
+  //       // Use regular expressions to match and capture the values, including minus sign
+  //       if (text != null) {
+  //         const matches = text.match(/(Cash|Credit Account|Check|Bank Transfer): ([-]?Rs([-]?\d{1,3}(?:,\d{3})*(?:\.\d+)?))/g);
 
-    //     if (checkMatch) {
-    //       checkColumn.push(parseFloat(checkMatch[1].replace(/[^0-9.]/g, '')));
-    //     } else {
-    //       checkColumn.push(0);
-    //     }
+  //         // Initialize variables to store the totals for each payment type
+  //         let cashTotal = 0;
+  //         let creditAccountTotal = 0;
+  //         let checkTotal = 0;
+  //         let bankTransferTotal = 0;
 
-    //     if (bankTransferMatch) {
-    //       bankTransferColumn.push(parseFloat(bankTransferMatch[1].replace(/[^0-9.]/g, '')));
-    //     } else {
-    //       bankTransferColumn.push(0);
-    //     }
-    //   }else{
-    //     bankTransferColumn.push(0);
-    //     checkColumn.push(0);
-    //     creditAccountColumn.push(0);
-    //   }
-    // }
+  //         if (matches) {
+  //           for (const match of matches) {
+  //             const [, paymentType, amount] = match.match(/(Cash|Credit Account|Check|Bank Transfer): ([-]?Rs([-]?\d{1,3}(?:,\d{3})*(?:\.\d+)?))/);
+  //             const parsedAmount = parseFloat(amount.replace(/[^0-9.-]/g, ''));
 
-    // // Create a new array with the columns
-    // const newTable = filteredData.slice(1).map((row, index) => ({
-    //   ...row,
-    //   'Cash': cashColumn[index],
-    //   'Credit Account': creditAccountColumn[index],
-    //   'Check': checkColumn[index],
-    //   'Bank Transfer': bankTransferColumn[index],
-    // }));
-
-    // console.log(newTable)
-
-    // return newTable
-
-  //     var uniqueSales = new Set();
-  //     const filteredData = [data[0]]; // Copy the first row (header) to the filtered data
-    
-  //     // Initialize columns
-  //     const cashColumn = [];
-  //     const creditAccountColumn = [];
-  //     const checkColumn = [];
-  //     const bankTransferColumn = [];
-    
-  //     for (let i = 1; i < data.length; i++) {
-  //       const row = data[i];
-  //       const saleId = row[19]; // Sale ID
-    
-  //       if (!uniqueSales.has(saleId)) {
-  //         uniqueSales.add(saleId);
-    
-  //         // Payment Type
-  //         const text = row[35];
-  //         console.log(text);
-    
-  //         // Use regular expressions to match and capture the values
-  //         if (text != null) {
-  //           const matches = text.match(/(Cash|Credit Account|Check|Bank Transfer): Rs([\d,.]+)/g);
-    
-  //           // Initialize variables to store the totals for each payment type
-  //           let cashTotal = 0;
-  //           let creditAccountTotal = 0;
-  //           let checkTotal = 0;
-  //           let bankTransferTotal = 0;
-    
-  //           if (matches) {
-  //             for (const match of matches) {
-  //               const [paymentType, amount] = match.split(': Rs');
-  //               const parsedAmount = parseFloat(amount.replace(/[^0-9.]/g, ''));
-    
-  //               if (paymentType === 'Cash') {
-  //                 cashTotal += parsedAmount;
-  //               } else if (paymentType === 'Credit Account') {
-  //                 creditAccountTotal += parsedAmount;
-  //               } else if (paymentType === 'Check') {
-  //                 checkTotal += parsedAmount;
-  //               } else if (paymentType === 'Bank Transfer') {
-  //                 bankTransferTotal += parsedAmount;
-  //               }
+  //             if (paymentType === 'Cash') {
+  //               cashTotal += parsedAmount;
+  //             } else if (paymentType === 'Credit Account') {
+  //               creditAccountTotal += parsedAmount;
+  //             } else if (paymentType === 'Check') {
+  //               checkTotal += parsedAmount;
+  //             } else if (paymentType === 'Bank Transfer') {
+  //               bankTransferTotal += parsedAmount;
   //             }
   //           }
-    
-  //           cashColumn.push(cashTotal);
-  //           creditAccountColumn.push(creditAccountTotal);
-  //           checkColumn.push(checkTotal);
-  //           bankTransferColumn.push(bankTransferTotal);
-  //         } else {
-  //           // Handle the case when Payment Type is null
-  //           cashColumn.push(0);
-  //           creditAccountColumn.push(0);
-  //           checkColumn.push(0);
-  //           bankTransferColumn.push(0);
   //         }
-    
-  //         filteredData.push(row);
+
+  //         cashColumn.push(cashTotal);
+  //         creditAccountColumn.push(creditAccountTotal);
+  //         checkColumn.push(checkTotal);
+  //         bankTransferColumn.push(bankTransferTotal);
+  //       } else {
+  //         // Handle the case when Payment Type is null
+  //         cashColumn.push(0);
+  //         creditAccountColumn.push(0);
+  //         checkColumn.push(0);
+  //         bankTransferColumn.push(0);
   //       }
+
+  //       filteredData.push(row);
   //     }
-    
-  //     // Create a new array with the columns
-  //     const newTable = filteredData.slice(1).map((row, index) => ({
-  //       ...row,
-  //       'Cash': cashColumn[index],
-  //       'Credit Account': creditAccountColumn[index],
-  //       'Check': checkColumn[index],
-  //       'Bank Transfer': bankTransferColumn[index],
-  //     }));
-    
-  //     console.log(newTable);
-    
-  //     return newTable;
+  //   }
+
+  // const newTable = filteredData.slice(1).map((row, index) => ({
+  //   'Product id': row[0],
+  //   'Sale id': row[19],
+  //   'Date': row[21],
+  //   'Sold to': row[25],
+  //   'Total': row[30],
+  //   'Profit': row[33],
+  //   'Payment type': row[35],
+  //   'Cash': cashColumn[index],
+  //   'Credit Account': creditAccountColumn[index],
+  //   'Check': checkColumn[index],
+  //   'Bank Transfer': bankTransferColumn[index],
+  // }));
+
+  //   console.log(newTable);
+
+  //   return newTable;
   // }
 
 
@@ -322,7 +270,7 @@ class App extends Component {
           )}
         </div>
 
-       <footer>META DEW TECHNOLOGIES(071 733 6065)</footer>
+        <footer>META DEW TECHNOLOGIES(071 733 6065)</footer>
       </div>
     );
   }
@@ -335,22 +283,22 @@ const DataTable = ({ data }) => {
 
   return (
     <div className="tableContainer">
-    <table>
-      <thead>
-        {data[0].map((header, index) => (
-          <th key={index}>{header}</th>
-        ))}
-      </thead>
-      <tbody>
-        {data.slice(1).map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            {row.map((cell, cellIndex) => (
-              <td key={cellIndex}>{cell}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+      <table>
+        <thead>
+          {data[0].map((header, index) => (
+            <th key={index}>{header}</th>
+          ))}
+        </thead>
+        <tbody>
+          {data.slice(1).map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {row.map((cell, cellIndex) => (
+                <td key={cellIndex}>{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

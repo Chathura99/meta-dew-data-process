@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "Test",
+			"path": "../../../Process/data_process/Test"
+		},
+		{
+			"name": "meta-dew-data-process",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
