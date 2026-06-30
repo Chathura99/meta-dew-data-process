@@ -92,6 +92,7 @@ class App extends Component {
   };
 
   handleFileChange = (e) => {
+    const fileInput = e.target;
     const file = e.target.files[0];
     if (!file) {
       return;
@@ -132,6 +133,9 @@ class App extends Component {
       this.setState({ processedData: newWorkbook });
     };
     reader.readAsArrayBuffer(file);
+
+    // Clear input so selecting the same file again still triggers onChange.
+    fileInput.value = '';
   };
 
   filterDuplicateSales(data) {
